@@ -1,17 +1,46 @@
 package com.coe.follow;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.util.Log;
 
 /**
  * Created by Shadilan on 10.12.2015.
  */
-public class Hunter {
+public class Hunter implements GameObject{
     private double x;
     private double y;
     private int direction;
-    private double angle;
-    public double getX(){return x;}
-    public double getY(){return y;}
+    public int getX(){return (int)x;}
+    public int getY(){return (int)y;}
+    private boolean isMoving=false;
+    private int stepNum=1;
+    private Paint paint;
+    private Bitmap image;
+    double angle=0;
+    private World world;
+    @Override
+    public Bitmap getImage() {
+        if (paint==null) paint=new Paint();
+
+        Bitmap result=Bitmap.createBitmap(40,40, Bitmap.Config.ARGB_8888);
+        Canvas canvas=new Canvas(result);
+
+
+        Matrix matrix=new Matrix();
+        //matrix.postTranslate(image.getWidth()/2, image.getHeight()/2);
+        matrix.preRotate((float) (angle),image.getWidth()/2, image.getHeight()/2);
+        //matrix.postTranslate(canvas.getWidth() / 2, canvas.getHeight() / 2);
+
+        Log.d("HunterTest", "Angle:" + angle);
+
+        canvas.drawBitmap(image, matrix, paint);
+
+        return result;
+    }
+
     public double getAngle(){return angle;}
     public double playerang;
     public double playerang2;
@@ -22,20 +51,23 @@ public class Hunter {
         direction=1;
         angle=0;
     }
-    public Hunter(double x,double y){
+    public Hunter(double x,double y,World world){
+        image=ImageLoader.getImage("hunter1");
+        this.world=world;
         this.x=x;
         this.y=y;
         direction=1;
         angle=0;
     }
-    public boolean move(Player player){
+    @Override
+    public boolean move(){
         shooting=false;
         //Check if see player;
-        double dy=player.getY()-y;
-        double dx=player.getX()-x;
+        double dy=world.player.getY()-y;
+        double dx=world.player.getX()-x;
         double distance=Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-        double viewang=Math.asin(dx / distance);
-        double viewang2=Math.acos(dy/distance);
+        double viewang=Math.asin(dx / distance)/Math.PI*180;
+        double viewang2=Math.acos(dy/distance)/Math.PI*180;
         playerang=viewang;
         playerang2=viewang2;
         if (playerang==playerang2){
@@ -46,17 +78,24 @@ public class Hunter {
         } else
         if (playerang>0){
             //2q
-            playerang=playerang2;
+            playerang=-1*playerang2;
         } else
         if (playerang<0){
             //3q
-            playerang=playerang2*-1;
+            playerang=playerang2;
         }
+        Log.d("HunterTest","PA:"+playerang+" HA:"+angle);
 
+        if ((Math.abs(playerang-angle)<30) && distance<200){
+            stepNum++;
 
-        if ((Math.abs(playerang-angle)<Math.PI/6)){
-                    //Move
-            Log.d("HunterTest","HA:"+angle+" PA:"+playerang);
+            if (stepNum<10) {
+                image = ImageLoader.getImage("hunter1");
+            }
+            else {
+                image=ImageLoader.getImage("hunter2");
+            }
+            if (stepNum>19) stepNum=1;
             angle=playerang;
             direction=-1*direction;
             int speed=3;
@@ -64,7 +103,6 @@ public class Hunter {
                 speed=2;
                 if (Math.random()*10>8) {
                     shooting = true;
-                    player.hit();
                 }
             };
             double k=distance/speed;
@@ -77,11 +115,11 @@ public class Hunter {
             return true;
         } else
         {
-            angle+=Math.PI/36*direction;
-            if (angle>Math.PI) {
+            angle+=5*direction;
+            if (angle>180) {
                 //angle-=Math.PI*2;
                 direction=direction*-1;
-            } else if (angle<Math.PI*-1) {
+            } else if (angle<-180) {
                 //angle+=Math.PI*2;
                 direction=direction*-1;
             }

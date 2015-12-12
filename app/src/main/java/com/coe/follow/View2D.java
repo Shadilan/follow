@@ -33,12 +33,13 @@ public class View2D  extends SurfaceView implements SurfaceHolder.Callback {
     }
     private void initListeners(){
         //Переписать.
-        world=new World(this.getWidth(),this.getHeight());
+        ImageLoader.LoadImage(this.getResources());
+        world=new World();
         player=world.player;
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                player.setTarget((int) event.getX(), (int) event.getY());
+                player.setTarget((int) (event.getX()/v.getWidth()*world.getWidth()), (int) (event.getY()/v.getHeight()*world.getHeight()));
                 return true;
             }
         });
