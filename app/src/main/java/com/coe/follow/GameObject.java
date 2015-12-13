@@ -10,7 +10,7 @@ public interface GameObject {
     public int getY();
     public boolean move();
     public Bitmap getImage();
-
+    public String getType();
 
 
 }

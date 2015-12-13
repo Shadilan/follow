@@ -24,6 +24,12 @@ public class ImageLoader {
         map.put("hunter1",t);
         t= BitmapFactory.decodeResource(res,R.mipmap.hunter2);
         map.put("hunter2",t);
+        t= BitmapFactory.decodeResource(res,R.mipmap.field);
+        map.put("field1",t);
+        t= BitmapFactory.decodeResource(res,R.mipmap.field2);
+        map.put("field2",t);
+        t= BitmapFactory.decodeResource(res,R.mipmap.crate1);
+        map.put("crate1",t);
     }
     public static Bitmap getImage(String Name){
         return map.get(Name);

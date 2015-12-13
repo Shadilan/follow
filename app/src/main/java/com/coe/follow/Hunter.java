@@ -31,10 +31,9 @@ public class Hunter implements GameObject{
 
         Matrix matrix=new Matrix();
         //matrix.postTranslate(image.getWidth()/2, image.getHeight()/2);
-        matrix.preRotate((float) (angle),image.getWidth()/2, image.getHeight()/2);
+        matrix.preRotate((float) (angle), image.getWidth() / 2, image.getHeight() / 2);
         //matrix.postTranslate(canvas.getWidth() / 2, canvas.getHeight() / 2);
 
-        Log.d("HunterTest", "Angle:" + angle);
 
         canvas.drawBitmap(image, matrix, paint);
 
@@ -84,8 +83,6 @@ public class Hunter implements GameObject{
             //3q
             playerang=playerang2;
         }
-        Log.d("HunterTest","PA:"+playerang+" HA:"+angle);
-
         if ((Math.abs(playerang-angle)<30) && distance<200){
             stepNum++;
 
@@ -108,10 +105,25 @@ public class Hunter implements GameObject{
             double k=distance/speed;
             double mx=dx/k;
             double my=dy/k;
+
             if (Math.abs(mx)>Math.abs(dx)) mx=dx;
             if (Math.abs(my)>Math.abs(dy)) my=dy;
+
             x+=mx;
             y+=my;
+            for (GameObject o:world.Objs){
+
+                double disobj=Math.sqrt(Math.pow(x-o.getX(),2)+Math.pow(y-o.getY(),2));
+                if(o.getType().equalsIgnoreCase("Field")){
+
+                    if (disobj<80){
+
+                        x-=mx;
+                        y-=my;
+                    }
+
+                }
+                           }
             return true;
         } else
         {
@@ -125,6 +137,10 @@ public class Hunter implements GameObject{
             }
             return false;
         }
+    }
+    @Override
+    public String getType() {
+        return "Hunter";
     }
 }
 

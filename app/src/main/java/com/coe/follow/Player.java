@@ -61,6 +61,11 @@ public class Player implements GameObject {
         return result;
     }
 
+    @Override
+    public String getType() {
+        return "Player";
+    }
+
     private double targetx;
     private double targety;
     private double startX;

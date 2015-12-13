@@ -32,15 +32,20 @@ public class World {
         return Height;
     }
     public World(){
-        this.Width=240;
-        this.Height=400;
+        this.Width=480;
+        this.Height=800;
         back= ImageLoader.getImage("back");
         paint=new Paint();
         player= new Player(Width/2,Height/13,this);
         Objs=new ArrayList<>();
-        Objs.add(player);
+        Field f=new Field(Width/2,Height/13,this);
+        Objs.add(f);
         Hunter h=new Hunter(Width/2,Height/4*3,this);
         Objs.add(h);
+        Crate c=new Crate(Width,Height,this);
+        Objs.add(c);
+
+        Objs.add(player);
         handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 for (GameObject o:Objs){
