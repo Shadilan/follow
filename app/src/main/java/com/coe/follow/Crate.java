@@ -27,8 +27,8 @@ public class Crate implements GameObject {
     }
 
     public Crate(double Width,double Height,World world){
-        x=Math.round(Math.random()*Width);
-        y=Math.round(Math.random()*Height);
+        x=Math.round(Math.random()*(Width-160)+80);
+        y=Math.round(Math.random()*(Height-240)+80);
         this.world=world;
     }
 

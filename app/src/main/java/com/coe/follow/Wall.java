@@ -44,16 +44,24 @@ public class Wall implements GameObject{
     }
     public void doDamage(){
         HP--;
-        if (HP>10) image= ImageLoader.getImage("wall1");
-        else if (HP>5) image= ImageLoader.getImage("wall2");
-        else if (HP>0) image= ImageLoader.getImage("wall3");
-        else image= ImageLoader.getImage("wall4");
+        setImage();
     }
     public Wall(int x,int y,World world){
         this.x=x;
         this.y=y;
         this.world=world;
-        image= ImageLoader.getImage("wall1");
+        HP=10;
+        setImage();
         Log.d("Wall width","Width"+image.getWidth());
+    }
+    private void setImage(){
+        if (HP>15) image= ImageLoader.getImage("wall1");
+        else if (HP>10) image= ImageLoader.getImage("wall2");
+        else if (HP>5) image= ImageLoader.getImage("wall3");
+        else image= ImageLoader.getImage("wall4");
+    }
+    public void doRepair(int Rate){
+        HP+=Rate;
+        setImage();
     }
 }

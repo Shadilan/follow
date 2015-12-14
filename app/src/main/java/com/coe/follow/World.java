@@ -43,8 +43,6 @@ public class World {
             w=new Wall(80/2+80*i,Height-40,this);
             Objs.add(w);
         }
-        Hunter h=new Hunter(Width/2,Height/4*3,this);
-        Objs.add(h);
         Crate c=new Crate(Width,Height,this);
         Objs.add(c);
         player= new Player(Width/2,Height-120,this);

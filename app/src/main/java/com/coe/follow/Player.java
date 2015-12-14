@@ -102,7 +102,7 @@ public class Player implements GameObject {
             }
             if (stepNum>19) stepNum=1;
             if (targety!=y) angle=Math.atan((targetx-x)/(targety-y))/Math.PI*180;
-            int speed=3;
+            int speed=5;
             if (carryCrate) speed=speed-1;
 
             double dx=targetx-x;
@@ -128,20 +128,23 @@ public class Player implements GameObject {
 
             if (Math.abs(mx)>Math.abs(dx)) mx=dx;
             if (Math.abs(my)>Math.abs(dy)) my=dy;
-            x+=mx;
-            y+=my;
+
             for (GameObject o:world.Objs){
                 double distance=Math.sqrt(Math.pow(x-o.getX(),2)+Math.pow(y-o.getY(),2));
-                if (o.getType().equalsIgnoreCase("Crate") && distance<20 && !carryCrate){
+                if (o.getType().equalsIgnoreCase("Crate") && distance<40 && !carryCrate){
                     world.removeObject(o);
                     carryCrate=true;
                 }
-                if (o.getType().equalsIgnoreCase("Field") && distance<10 && carryCrate){
+                if (o.getType().equalsIgnoreCase("Wall") && distance<80 && carryCrate){
+                    mx=0;
+                    my=0;
                     carryCrate=false;
-                    ((Field)o).addCrate();
+                    ((Wall) o).doRepair(3);
                     world.addObject(new Crate(world.getWidth(),world.getHeight(),world));
                 }
             }
+            x+=mx;
+            y+=my;
             return true;
         } else return false;
     }
