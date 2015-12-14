@@ -25,7 +25,7 @@ public class Hunter implements GameObject{
     public Bitmap getImage() {
         if (paint==null) paint=new Paint();
 
-        Bitmap result=Bitmap.createBitmap(40,40, Bitmap.Config.ARGB_8888);
+        Bitmap result=Bitmap.createBitmap(80,80, Bitmap.Config.ARGB_8888);
         Canvas canvas=new Canvas(result);
 
 
@@ -111,19 +111,25 @@ public class Hunter implements GameObject{
 
             x+=mx;
             y+=my;
-            for (GameObject o:world.Objs){
+            for (GameObject o:world.Objs) {
 
-                double disobj=Math.sqrt(Math.pow(x-o.getX(),2)+Math.pow(y-o.getY(),2));
-                if(o.getType().equalsIgnoreCase("Field")){
+                double disobj = Math.sqrt(Math.pow(x - o.getX(), 2) + Math.pow(y - o.getY(), 2));
+                if (o.getType().equalsIgnoreCase("Field")) {
 
-                    if (disobj<80){
+                    if (disobj < 80) {
 
-                        x-=mx;
-                        y-=my;
+                        x -= mx;
+                        y -= my;
                     }
 
                 }
-                           }
+                if(o.getType().equalsIgnoreCase("Player")&&disobj<40 && ((Player)o).isCarryCrate()){
+                    //Отобрать груз
+                    ((Player)o).removeCargo();
+                    //Разместить груз
+                    world.addObject(new Crate(world.getWidth(),world.getHeight(),world));
+                }
+            }
             return true;
         } else
         {

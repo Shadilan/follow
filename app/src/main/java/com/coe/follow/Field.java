@@ -1,6 +1,7 @@
 package com.coe.follow;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 
@@ -13,6 +14,22 @@ public class Field implements GameObject{
     private Bitmap image;
     private World world;
     private double x;
+    private int crates=0;
+    private Bitmap crateImg;
+    public void addCrate(){
+        crates++;
+        if (crateImg==null){
+            crateImg=Bitmap.createBitmap(image.getWidth(),image.getHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas =new Canvas(crateImg);
+        int width=canvas.getWidth();
+        Bitmap crate=ImageLoader.getImage("crate1");
+        int count=width/crate.getWidth();
+        double cx=(crates-1)%count*crate.getWidth();
+        double cy=(crates-1)/count*crate.getHeight();
+        canvas.drawBitmap(crate,(int)cx,(int)cy,paint);
+    }
     public int getX(){
         return (int)x;
     }
@@ -36,7 +53,11 @@ public class Field implements GameObject{
 
     @Override
     public Bitmap getImage() {
-        return image;
+        Bitmap result=Bitmap.createBitmap(image.getWidth(),image.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(image,0,0,paint);
+        if (crateImg!=null) canvas.drawBitmap(crateImg,0,0,paint);
+        return result;
     }
 
     @Override

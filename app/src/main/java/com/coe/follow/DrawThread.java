@@ -30,8 +30,8 @@ public class DrawThread  extends Thread{
             this.surfaceHolder = surfaceHolder;
 
             // загружаем картинку, которую будем отрисовывать
-            picture = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher);
-            back=BitmapFactory.decodeResource(resources, R.mipmap.back);
+            //picture = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher);
+            //back=BitmapFactory.decodeResource(resources, R.mipmap.back);
             // формируем матрицу преобразований для картинки
             paint=new Paint();
             paint.setColor(Color.WHITE);

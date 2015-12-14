@@ -45,7 +45,7 @@ public class Player implements GameObject {
 
         if (paint==null) paint=new Paint();
 
-        Bitmap result=Bitmap.createBitmap(40,40, Bitmap.Config.ARGB_8888);
+        Bitmap result=Bitmap.createBitmap(80,80, Bitmap.Config.ARGB_8888);
         Canvas canvas=new Canvas(result);
 
 
@@ -71,6 +71,8 @@ public class Player implements GameObject {
     private double startX;
     private double startY;
     private World world;
+    private boolean carryCrate=false;
+    public boolean isCarryCrate() {return  carryCrate;}
 
 
     public Player(double x,double y,World world){
@@ -91,14 +93,18 @@ public class Player implements GameObject {
             stepNum++;
 
             if (stepNum<10) {
-                image = ImageLoader.getImage("hero1");
+                if (this.isCarryCrate()) image = ImageLoader.getImage("herocargo1");
+                    else image = ImageLoader.getImage("hero1");
             }
             else {
-                image=ImageLoader.getImage("hero2");
+                if (this.isCarryCrate()) image = ImageLoader.getImage("herocargo2");
+                else image = ImageLoader.getImage("hero2");
             }
             if (stepNum>19) stepNum=1;
             if (targety!=y) angle=Math.atan((targetx-x)/(targety-y))/Math.PI*180;
             int speed=3;
+            if (carryCrate) speed=speed-1;
+
             double dx=targetx-x;
             double dy=targety-y;
             double g=Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2));
@@ -124,8 +130,23 @@ public class Player implements GameObject {
             if (Math.abs(my)>Math.abs(dy)) my=dy;
             x+=mx;
             y+=my;
+            for (GameObject o:world.Objs){
+                double distance=Math.sqrt(Math.pow(x-o.getX(),2)+Math.pow(y-o.getY(),2));
+                if (o.getType().equalsIgnoreCase("Crate") && distance<20 && !carryCrate){
+                    world.removeObject(o);
+                    carryCrate=true;
+                }
+                if (o.getType().equalsIgnoreCase("Field") && distance<10 && carryCrate){
+                    carryCrate=false;
+                    ((Field)o).addCrate();
+                    world.addObject(new Crate(world.getWidth(),world.getHeight(),world));
+                }
+            }
             return true;
         } else return false;
+    }
+    public void removeCargo(){
+        carryCrate=false;
     }
     public void setTarget(double x,double y){
         targetx=x;
