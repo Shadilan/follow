@@ -1,16 +1,21 @@
 package com.coe.follow;
 
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.Image;
 import android.os.Handler;
-import android.view.Window;
+
+import com.coe.follow.GameBase.GameObject;
+import com.coe.follow.Items.Crate;
+import com.coe.follow.Monsters.Hunter;
+import com.coe.follow.Structures.Home;
+import com.coe.follow.Structures.HunterPortal;
+import com.coe.follow.Structures.StoneMine;
+import com.coe.follow.Structures.Wall;
+import com.coe.follow.utils.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -31,22 +36,26 @@ public class World {
     public int getHeight(){
         return Height;
     }
+    private int visWidth=480;
+    private int visHeight=700;
     public World(){
-        this.Width=960;
-        this.Height=1600;
+        this.Width=10000;
+        this.Height=10000;
         back= ImageLoader.getImage("back");
         paint=new Paint();
 
         Objs=new ArrayList<>();
-        Wall w;
-        for (int i=0;i<Width/80;i++){
-            w=new Wall(80/2+80*i,Height-40,this);
-            Objs.add(w);
-        }
-        Crate c=new Crate(Width,Height,this);
-        Objs.add(c);
+        //Стартовая локация
+            //База
+        Objs.add(new Home(Width/2,Height/2,this));
+            //Игрок
         player= new Player(Width/2,Height-120,this);
         Objs.add(player);
+        //Шахта
+        Objs.add(new StoneMine(Width/4,Height/4*3,this));
+        //Портал охотников
+        Objs.add(new HunterPortal(Width/4*3,Height/4,this));
+
         handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 move();          }
@@ -59,16 +68,23 @@ public class World {
         return img;
     }
     public void genImage(){
-        Bitmap result=Bitmap.createBitmap(Width,Height, Bitmap.Config.ARGB_8888);
+        Bitmap result=Bitmap.createBitmap(Width,Height+200, Bitmap.Config.ARGB_8888);
         Canvas canvas=new Canvas(result);
         //canvas.drawColor(Color.BLACK);
-        canvas.drawBitmap(back, new Rect(0, 0, back.getWidth(), back.getHeight()), new Rect(0, 0, canvas.getWidth(), canvas.getHeight()), paint);
+        canvas.drawBitmap(back, new Rect(0, 0, back.getWidth(), back.getHeight()), new Rect(0, 0, canvas.getWidth(), canvas.getHeight()-200), paint);
         for (GameObject o:Objs){
             Bitmap pic=o.getImage();
             int x=o.getX()-pic.getWidth()/2;
             int y=o.getY()-pic.getHeight()/2;
             canvas.drawBitmap(pic, x, y, paint);
         }
+        paint.setTextSize(40);
+        paint.setColor(Color.WHITE);
+        canvas.drawText("Score:" + player.getScore(), 10, 40, paint);
+        Bitmap btn=ImageLoader.getImage("explosionb");
+        canvas.drawBitmap(btn,new Rect(0,0,btn.getWidth(),btn.getHeight()),new Rect(0,Height,200,Height+200), paint);
+        btn=ImageLoader.getImage("cannonb");
+        canvas.drawBitmap(btn,new Rect(0,0,btn.getWidth(),btn.getHeight()),new Rect(200,Height,400,Height+200), paint);
         img=result;
     }
     private ArrayList<GameObject> objToRemove;

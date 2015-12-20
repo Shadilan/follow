@@ -2,11 +2,16 @@ package com.coe.follow;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.media.MediaActionSound;
 import android.util.Log;
+
+import com.coe.follow.GameBase.GameObject;
+import com.coe.follow.Items.Crate;
+import com.coe.follow.Structures.Cannon;
+import com.coe.follow.Structures.Mine;
+import com.coe.follow.Structures.Wall;
+import com.coe.follow.utils.ImageLoader;
 
 /**
  * Created by Shadilan on 10.12.2015.
@@ -73,9 +78,38 @@ public class Player implements GameObject {
     private World world;
     private boolean carryCrate=false;
     public boolean isCarryCrate() {return  carryCrate;}
-
-
+    private int mineCount;
+    public int getMineCount(){return mineCount;}
+    public void returnMine(){
+        mineCount++;
+    }
+    public boolean setMine(){
+        if (mineCount>0) {
+            world.addObject(new Mine(x, y, 160, world));
+            mineCount--;
+        } else return false;
+        return true;
+    }
+    private int cannonCount=1;
+    public int getCannonCountCount(){return cannonCount;}
+    public void returnCannon(){
+        cannonCount++;
+    }
+    public boolean setCannon(){
+        if (cannonCount>0) {
+            world.addObject(new Cannon(world,(int) x , (int) y));
+            mineCount--;
+        } else return false;
+        return true;
+    }
+    private int score;
+    public int getScore(){return score;}
+    public void addScore(int score){
+        this.score+=score;
+    }
     public Player(double x,double y,World world){
+        score=0;
+        mineCount=3;
         this.x=x;
         this.y=y;
         targetx=x;
@@ -102,7 +136,7 @@ public class Player implements GameObject {
             }
             if (stepNum>19) stepNum=1;
             if (targety!=y) angle=Math.atan((targetx-x)/(targety-y))/Math.PI*180;
-            int speed=5;
+            int speed=10;
             if (carryCrate) speed=speed-1;
 
             double dx=targetx-x;

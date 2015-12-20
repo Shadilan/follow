@@ -12,15 +12,37 @@
     <com.coe.follow.View2D
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/view" />
+        android:id="@+id/view2d" />
 
-    <HorizontalScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/horizontalScrollView"
+        android:visibility="invisible"
+        android:layout_height="match_parent">
+    <!--
+    Продолжить
+    Начаmь сначала
+    Увеличить количество мин
+    Улучшить мины
+    Увеличить количество пушек
+    Улучшить пушки
+    Увеличить количество ежей
+    Улучшить ежей
+    Улучшить Новуы
+    Улучшить Ремонт
+    Увеличить скорость
 
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/view" />
+    -->
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Resume" />
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Start" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

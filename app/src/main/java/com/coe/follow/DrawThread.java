@@ -42,7 +42,7 @@ public class DrawThread  extends Thread{
         public void setRunning(boolean run) {
             runFlag = run;
         }
-
+        public boolean getRunning(){return runFlag;}
         @Override
         public void run() {
             Canvas canvas;
@@ -73,6 +73,11 @@ public class DrawThread  extends Thread{
                             surfaceHolder.unlockCanvasAndPost(canvas);
                         }
                     }
+                }
+                try {
+                    sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
