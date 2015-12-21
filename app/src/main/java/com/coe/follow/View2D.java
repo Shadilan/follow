@@ -44,17 +44,8 @@ public class View2D  extends SurfaceView implements SurfaceHolder.Callback {
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getY() > v.getHeight() - 100) {
-                    if (event.getX() < 100) {
-                        player.setMine();
-                        return false;
-                    } else if (event.getX() < 200) {
-                        player.setCannon();
-                        return false;
-                    }
-                }
-                    player.setTarget((int) (event.getX() / v.getWidth() * world.getWidth()), (int) (event.getY() / (v.getHeight() - 100) * world.getHeight()));
-                    return true;
+                world.Touch((int)event.getX()*world.getVisWidth()/v.getWidth(),(int)event.getY()*(world.getVisHeight()+200)/v.getHeight());
+                return false;
                 
             }
         });

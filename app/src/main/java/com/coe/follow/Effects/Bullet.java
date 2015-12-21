@@ -13,7 +13,6 @@ import com.coe.follow.utils.ImageLoader;
  * Created by Shadilan on 16.12.2015.
  */
 public class Bullet extends GameEffect {
-    private World world;
     private GameObject target;
     public Bullet(int x,int y,World world, GameObject owner,GameObject target){
         super(x,y,world,owner);

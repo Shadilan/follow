@@ -105,6 +105,13 @@ public class ImageLoader {
         t= BitmapFactory.decodeResource(res,R.drawable.hunterportal3);
         map.put("hunterportal3",t);
 
+        t= BitmapFactory.decodeResource(res,R.drawable.stonemine1);
+        map.put("stonemine1",t);
+        t= BitmapFactory.decodeResource(res,R.drawable.stonemine2);
+        map.put("stonemine2",t);
+        t= BitmapFactory.decodeResource(res,R.drawable.stonemine3);
+        map.put("stonemine3",t);
+
         t= BitmapFactory.decodeResource(res,R.drawable.bite1);
         map.put("bite11",t);
 
@@ -112,6 +119,10 @@ public class ImageLoader {
         map.put("explosionb",t);
         t= BitmapFactory.decodeResource(res,R.drawable.cannonb);
         map.put("cannonb",t);
+        t= BitmapFactory.decodeResource(res,R.drawable.novab);
+        map.put("novab",t);
+        t= BitmapFactory.decodeResource(res,R.drawable.wallb);
+        map.put("wallb",t);
 
     }
     public static Bitmap getImage(String Name){

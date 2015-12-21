@@ -22,22 +22,28 @@ public class Explosion extends GameEffect{
         super(x, y, world, owner);
         paint=new Paint();
         power=40;
-        image= ImageLoader.getImage("explosion1");
+        image= ImageLoader.getImage("explosion");
     }
     public boolean move(){
-        image= Bitmap.createBitmap(121-power*3,121-power*3, Bitmap.Config.ARGB_8888);
+        int radius=201-power*5;
+        image= Bitmap.createBitmap(radius,radius, Bitmap.Config.ARGB_8888);
+
         Canvas c=new Canvas(image);
-        c.drawBitmap(ImageLoader.getImage("explosion1"),new Rect(0,0,80,80),new Rect(0,0,image.getWidth(),image.getHeight()),paint);
+        c.drawBitmap(ImageLoader.getImage("explosion"),new Rect(0,0,80,80),new Rect(0,0,image.getWidth(),image.getHeight()),paint);
         for (GameObject o:world.Objs){
             int distance= (int) MyMath.getDistance(x,y,o.getX(),o.getY());
-            if (distance==121-power*3 && (o instanceof GameMob)&& o!=owner){
+            if (distance==radius && (o instanceof GameMob)&& o!=owner){
                 ((GameMob) o).doDamage(this);
             }
-            if (distance==121-power*3 && (o instanceof GameStructure)&& o!=owner){
+            if (distance==radius && (o instanceof GameStructure)&& o!=owner){
                 ((GameStructure) o).doDamage(this);
             }
         }
         power--;
+        if (power<0){
+            Active=false;
+            world.removeObject(this);
+        }
         return true;
     }
 }

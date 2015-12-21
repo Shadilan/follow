@@ -20,6 +20,7 @@ public class Home extends GameStructure {
         super(x, y, world);
         hp=1000;
         paint=new Paint();
+        genImage();
     }
 
     private int step=0;

@@ -6,7 +6,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
+import com.coe.follow.Effects.Explosion;
 import com.coe.follow.GameBase.GameObject;
+import com.coe.follow.Items.Bag;
 import com.coe.follow.Items.Crate;
 import com.coe.follow.Structures.Cannon;
 import com.coe.follow.Structures.Mine;
@@ -16,7 +18,7 @@ import com.coe.follow.utils.ImageLoader;
 /**
  * Created by Shadilan on 10.12.2015.
  */
-public class Player implements GameObject {
+public class Player extends GameObject {
     /*
     Объект управляется игроком. Есть текущие координаты (Как у любого объекта) есть целевая точка.
     В случае гибели объект перемещается на базу.
@@ -36,14 +38,14 @@ public class Player implements GameObject {
       Эффекты
 
      */
-    private double x;
-    public int getX(){return (int)x;}
-    private double y;
-    public int getY(){return (int)y;}
-    private boolean isMoving=false;
+    private double targetx;
+    private double targety;
+
+    private int stone=10;
+    private int crystal=10;
+
     private int stepNum=1;
     private Paint paint;
-    private Bitmap image;
     double angle=0;
     @Override
     public Bitmap getImage() {
@@ -65,59 +67,43 @@ public class Player implements GameObject {
 
         return result;
     }
-
-    @Override
-    public String getType() {
-        return "Player";
+    boolean novaReady=true;
+    public boolean setNova(){
+        if (novaReady) {
+            world.addObject(new Explosion((int) x, (int) y, world,this));
+            novaReady=false;
+            return true;
+        } else return false;
     }
 
-    private double targetx;
-    private double targety;
-    private double startX;
-    private double startY;
-    private World world;
-    private boolean carryCrate=false;
-    public boolean isCarryCrate() {return  carryCrate;}
-    private int mineCount;
-    public int getMineCount(){return mineCount;}
-    public void returnMine(){
-        mineCount++;
+    public boolean setWall(){
+        if (stone>1) {
+            world.addObject(new Wall((int) x, (int) y, world));
+            stone--;
+            return true;
+        } else return false;
     }
     public boolean setMine(){
-        if (mineCount>0) {
-            world.addObject(new Mine(x, y, 160, world));
-            mineCount--;
+        if (crystal>1) {
+            world.addObject(new Mine((int) x, (int) y, world));
+            crystal--;
+            return true;
         } else return false;
-        return true;
-    }
-    private int cannonCount=1;
-    public int getCannonCountCount(){return cannonCount;}
-    public void returnCannon(){
-        cannonCount++;
     }
     public boolean setCannon(){
-        if (cannonCount>0) {
-            world.addObject(new Cannon(world,(int) x , (int) y));
-            mineCount--;
+        if (stone>4 && crystal>4) {
+            world.addObject(new Cannon((int) x, (int) y, world));
+            crystal-=4;
+            stone-=4;
+            return true;
         } else return false;
-        return true;
+
     }
-    private int score;
-    public int getScore(){return score;}
-    public void addScore(int score){
-        this.score+=score;
-    }
-    public Player(double x,double y,World world){
-        score=0;
-        mineCount=3;
-        this.x=x;
-        this.y=y;
+    public Player(int x,int y,World world){
+        super(x,y,world);
+        image = ImageLoader.getImage("hero1");
         targetx=x;
         targety=y;
-        startX=x;
-        startY=y;
-        this.world=world;
-        image = ImageLoader.getImage("hero1");
     }
     public boolean move(){
 
@@ -126,18 +112,17 @@ public class Player implements GameObject {
         {
             stepNum++;
 
-            if (stepNum<10) {
-                if (this.isCarryCrate()) image = ImageLoader.getImage("herocargo1");
-                    else image = ImageLoader.getImage("hero1");
+            if (stepNum==4) {
+                image=ImageLoader.getImage("hero1");
             }
-            else {
-                if (this.isCarryCrate()) image = ImageLoader.getImage("herocargo2");
-                else image = ImageLoader.getImage("hero2");
+            else if (stepNum==1){
+                image=ImageLoader.getImage("hero2");
+            } else if (stepNum>6) {
+                stepNum=0;
+                novaReady=true;
             }
-            if (stepNum>19) stepNum=1;
             if (targety!=y) angle=Math.atan((targetx-x)/(targety-y))/Math.PI*180;
             int speed=10;
-            if (carryCrate) speed=speed-1;
 
             double dx=targetx-x;
             double dy=targety-y;
@@ -165,16 +150,12 @@ public class Player implements GameObject {
 
             for (GameObject o:world.Objs){
                 double distance=Math.sqrt(Math.pow(x-o.getX(),2)+Math.pow(y-o.getY(),2));
-                if (o.getType().equalsIgnoreCase("Crate") && distance<40 && !carryCrate){
+                if (o instanceof Crate){
                     world.removeObject(o);
-                    carryCrate=true;
-                }
-                if (o.getType().equalsIgnoreCase("Wall") && distance<80 && carryCrate){
-                    mx=0;
-                    my=0;
-                    carryCrate=false;
-                    ((Wall) o).doRepair(3);
-                    world.addObject(new Crate(world.getWidth(),world.getHeight(),world));
+                    this.stone++;
+                } else if (o instanceof Bag){
+                    world.removeObject(o);
+                    this.crystal++;
                 }
             }
             x+=mx;
@@ -182,11 +163,16 @@ public class Player implements GameObject {
             return true;
         } else return false;
     }
-    public void removeCargo(){
-        carryCrate=false;
-    }
     public void setTarget(double x,double y){
         targetx=x;
         targety=y;
+    }
+
+    public int getStone() {
+        return stone;
+    }
+
+    public int getCrystal() {
+        return crystal;
     }
 }
