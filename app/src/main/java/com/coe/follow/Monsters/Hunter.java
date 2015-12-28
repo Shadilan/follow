@@ -17,15 +17,12 @@ import com.coe.follow.World;
 import com.coe.follow.utils.ImageLoader;
 
 /**
- * Created by Shadilan on 10.12.2015.
+ * Появляется в рандомной точке по х и 0 по у
+ Определяет цель рандомную точку по х и высота по у
+ Движется с равномерной скоростью по прямой к точке
+ При встрече с объектом Wall взрывается нанося 1 повреждение стене после этого создается новый монстр.
  */
 public class Hunter extends GameMob {
-    /*
-    Появляется в рандомной точке по х и 0 по у
-    Определяет цель рандомную точку по х и высота по у
-    Движется с равномерной скоростью по прямой к точке
-    При встрече с объектом Wall взрывается нанося 1 повреждение стене после этого создается новый монстр.
-     */
     private double targetx;
     private double targety;
     private double angle=0;
@@ -51,11 +48,12 @@ public class Hunter extends GameMob {
     private void start(){
         image= ImageLoader.getImage("hunter1");
         this.targetx=(world.getWidth()*Math.random());
-        this.targety=(world.getHeight()*Math.random());;
+        this.targety=(world.getHeight()*Math.random());
         double distance=Math.sqrt(Math.pow(targetx-x,2)+Math.pow(targety-y,2));
         angle=Math.acos((targetx-x)/distance);
         mx=(targetx-x)/(distance/10);
         my=(targety-y)/(distance/10);
+        hp=20;
     }
     @Override
     public boolean move(){

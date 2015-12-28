@@ -12,7 +12,7 @@ import com.coe.follow.World;
 import com.coe.follow.utils.ImageLoader;
 
 /**
- * Created by Shadilan on 20.12.2015.
+ * HomeBase
  */
 public class Home extends GameStructure {
     Paint paint;
@@ -26,7 +26,7 @@ public class Home extends GameStructure {
     private int step=0;
     public boolean move(){
         step++;
-        if (step==40){
+        if (step==50){
             if (hp<1000) hp++;
             step=0;
         }
@@ -35,20 +35,20 @@ public class Home extends GameStructure {
         return false;
     }
     public void genImage(){
-        image=Bitmap.createBitmap(160,160, Bitmap.Config.ARGB_8888);
+        image=Bitmap.createBitmap(240,240, Bitmap.Config.ARGB_8888);
         Canvas c=new Canvas(image);
-        if (step<10){
+        if (step<30){
             c.drawBitmap(ImageLoader.getImage("base1"),0,0,paint);
-        } else if (step<20){
+        } else if (step<35){
             c.drawBitmap(ImageLoader.getImage("base2"),0,0,paint);
 
-        } else if (step<30){
+        } else if (step<40){
             c.drawBitmap(ImageLoader.getImage("base3"),0,0,paint);
         }else {
             c.drawBitmap(ImageLoader.getImage("base4"),0,0,paint);
         }
         paint.setColor(Color.RED);
-        double size=160/1000*hp;
+        double size=160*hp/1000;
         //TODO: Разобраться с заливкой полоски хп.
         c.drawRect(0,0, (float) size,20,paint);
 

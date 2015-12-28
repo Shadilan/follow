@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
- * Created by Shadilan on 10.12.2015.
+ * поток отрисовки
  */
 public class DrawThread  extends Thread{
         private boolean runFlag = false;
@@ -52,7 +52,7 @@ public class DrawThread  extends Thread{
                 // сохраненным моментом времени
                 long now = System.currentTimeMillis();
                 long elapsedTime = now - prevTime;
-                if (elapsedTime > 10) {
+                if (elapsedTime > 5) {
                     canvas = null;
                     try {
                         // получаем объект Canvas и выполняем отрисовку
@@ -60,7 +60,6 @@ public class DrawThread  extends Thread{
                         if (canvas != null) {
 
                             synchronized (surfaceHolder) {
-                                world.handler.sendEmptyMessage(0);
                                 Bitmap pic=world.getImage();
                                 canvas.drawBitmap(pic,new Rect(0,0,pic.getWidth(),pic.getHeight()),new Rect(0,0,canvas.getWidth(),canvas.getHeight()),paint);
 

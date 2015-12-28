@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.coe.follow.Effects.Explosion;
+import com.coe.follow.GameBase.GameHero;
 import com.coe.follow.GameBase.GameObject;
 import com.coe.follow.Items.Bag;
 import com.coe.follow.Items.Crate;
@@ -16,9 +17,9 @@ import com.coe.follow.Structures.Wall;
 import com.coe.follow.utils.ImageLoader;
 
 /**
- * Created by Shadilan on 10.12.2015.
+ * Player of the game
  */
-public class Player extends GameObject {
+public class Player extends GameHero {
     /*
     Объект управляется игроком. Есть текущие координаты (Как у любого объекта) есть целевая точка.
     В случае гибели объект перемещается на базу.
@@ -38,8 +39,6 @@ public class Player extends GameObject {
       Эффекты
 
      */
-    private double targetx;
-    private double targety;
 
     private int stone=10;
     private int crystal=10;
@@ -102,8 +101,6 @@ public class Player extends GameObject {
     public Player(int x,int y,World world){
         super(x,y,world);
         image = ImageLoader.getImage("hero1");
-        targetx=x;
-        targety=y;
     }
     public boolean move(){
 
@@ -143,7 +140,7 @@ public class Player extends GameObject {
             } else
             if (angle1>0){
                 angle=-1*angle2;
-            };
+            }
 
             if (Math.abs(mx)>Math.abs(dx)) mx=dx;
             if (Math.abs(my)>Math.abs(dy)) my=dy;
@@ -163,10 +160,7 @@ public class Player extends GameObject {
             return true;
         } else return false;
     }
-    public void setTarget(double x,double y){
-        targetx=x;
-        targety=y;
-    }
+
 
     public int getStone() {
         return stone;
